@@ -11,10 +11,10 @@ setup(
     py_modules=["tap_woocommerce"],
     install_requires=[
         'attrs==18.1.0',
-        'backoff==1.3.2',
+        'backoff==1.8.0',
         'python-dateutil==2.7.3',
         "pendulum",
-        'singer-python==5.0.15',
+        'singer-python==5.12.2',
         'woocommerce==3.0.0'
     ],
     entry_points="""
@@ -22,7 +22,7 @@ setup(
     tap-woocommerce=tap_woocommerce:main
     """,
     packages=["tap_woocommerce"],
-    package_data = {
+    package_data={
         "schemas": ["tap_woocommerce/schemas/*.json"]
     },
     include_package_data=True,
