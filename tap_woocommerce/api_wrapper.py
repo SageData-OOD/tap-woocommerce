@@ -36,8 +36,15 @@ class ApiWrapper:
         finally:
             self._logger.info("API reports end")
 
+    def customers(self, params):
+        try:
+            self._logger.info("API customers start")
+            return self._get("customers", "customers", params)
+        finally:
+            self._logger.info("API customers end")
 
-    def _get(self, stream_id, url, params):
+
+    def _get(self, stream_id , url, params):
         with metrics.http_request_timer(stream_id) as timer:
             resp = self._wcApi.get(url, params=params)
             timer.tags[metrics.Tag.http_status_code] = resp.status_code
