@@ -33,18 +33,21 @@
       "type": ["null", "boolean"]
     },
     "refunds": {
-      "type": ["null", "object", "array"],
-      "properties": {
-        "id": {
-          "type": ["null", "number"]
-        },
-        "reason": {
-          "type": ["null", "string"]
-        },
-        "total": {
-          "type": ["null", "string"]
-        }
-      }
+      "type": ["null", "array"],
+       "items": {
+         "type": ["null", "object"],
+         "properties": {
+            "id": {
+              "type": ["null", "number"]
+            },
+            "reason": {
+              "type": ["null", "string"]
+            },
+            "total": {
+              "type": ["null", "string"]
+            }
+          }
+       }
     },
     "discount_total": {
       "type": ["null", "number"]
