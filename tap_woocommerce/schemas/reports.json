@@ -5,16 +5,16 @@
       "type": ["null", "string"]
     },
     "net_sales": {
-      "type": ["null", "number"]
+      "type": ["null", "string"]
     },
     "average_sales": {
       "type": ["null", "string"]
     },
     "total_orders": {
-      "type": ["null", "string"]
+      "type": ["null", "integer"]
     },
     "total_items": {
-      "type": ["null", "string"]
+      "type": ["null", "integer"]
     },
     "total_tax": {
       "type": ["null", "string"]
@@ -23,45 +23,13 @@
       "type": ["null", "string"]
     },
     "total_refunds": {
-      "type": ["null", "string"]
+      "type": ["null", "integer"]
     },
     "total_discount": {
       "type": ["null", "string"]
     },
     "totals_grouped_by": {
       "type": ["null", "string"]
-    },
-    "totals": {
-      "type": ["null", "array"],
-      "items": {
-        "type": ["null", "object"],
-        "properties": {
-          "sales": {
-            "type": ["null", "string"]
-          },
-          "orders": {
-            "type": ["null", "string"]
-          },
-          "items": {
-            "type": ["null", "string"]
-          },
-          "tax": {
-            "type": ["null", "string"]
-          },
-          "shipping": {
-            "type": ["null", "string"]
-          },
-          "discount": {
-            "type": ["null", "string"]
-          },
-          "customers": {
-            "type": ["null", "string"]
-          },
-          "date": {
-            "type": ["null", "string"]
-          }
-        }
-      }
     },
     "date_start": {
       "type": ["null", "string"]

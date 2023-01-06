@@ -106,9 +106,13 @@ def sync_orders(woocommerce_client, config, state, stream):
         }
         while True:
             orders = woocommerce_client.orders(params)
+            # with open("sync_orders.json", "w") as fout:
+            #     fout.write(json.dumps(orders, indent=4))
+
             for order in orders:
                 counter.increment()
-                row = transform(order, schema, metadata=mdata)
+                # row = transform(order, schema, metadata=mdata)
+                row = order
                 if parser.parse(row[bookmark_column]).replace(tzinfo=None) > parser.parse(last_update).replace(
                         tzinfo=None):
                     last_update = row[bookmark_column]
@@ -135,13 +139,15 @@ def sync_reports(woocommerce_client, config, state, stream):
     start_date = singer.get_bookmark(state, stream.tap_stream_id, bookmark_column).split(" ")[0] \
         if state.get("bookmarks", {}).get(stream.tap_stream_id) else config["start_date"]
 
+    start_date = start_date[:10]
     LOGGER.info("Only syncing reports updated since " + start_date)
     last_update = start_date
     with singer.metrics.record_counter(stream.tap_stream_id) as counter:
         while True:
             report_response = woocommerce_client.reports(last_update, last_update)
             for resp in report_response:
-                transformed_data = transform(resp, schema, metadata=mdata)
+                # transformed_data = transform(resp, schema, metadata=mdata)
+                transformed_data = resp
                 singer.write_records(stream.tap_stream_id, [transformed_data])
                 counter.increment()
             if pendulum.parse(last_update).to_date_string() == pendulum.yesterday().to_date_string():
