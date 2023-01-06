@@ -20,7 +20,7 @@ class ApiWrapper:
     @utils.ratelimit(20, 1)
     def orders(self, params):
         try:
-            self._logger.info("API orders start")
+            self._logger.info("API orders get params: %s", params)
             return self._get("orders", "orders", params=params)
         finally:
             self._logger.info("API orders end")

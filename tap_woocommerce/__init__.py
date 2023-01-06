@@ -97,18 +97,16 @@ def sync_orders(woocommerce_client, config, state, stream):
     last_update = start_date
     page_number = 1
     with singer.metrics.record_counter(stream.tap_stream_id) as counter:
-        params = {
-            "after": last_update,
-            "orderby": "date",
-            "order": "asc",
-            "per_page": "100",
-            "page": page_number
-        }
         while True:
-            orders = woocommerce_client.orders(params)
-            # with open("sync_orders.json", "w") as fout:
-            #     fout.write(json.dumps(orders, indent=4))
+            params = {
+                "after": last_update,
+                "orderby": "date",
+                "order": "asc",
+                "per_page": "100",
+                "page": page_number
+            }
 
+            orders = woocommerce_client.orders(params)
             for order in orders:
                 counter.increment()
                 # row = transform(order, schema, metadata=mdata)
@@ -116,10 +114,14 @@ def sync_orders(woocommerce_client, config, state, stream):
                 if parser.parse(row[bookmark_column]).replace(tzinfo=None) > parser.parse(last_update).replace(
                         tzinfo=None):
                     last_update = row[bookmark_column]
+                    page_number = 1
+                else:
+                    page_number += 1
+
                 singer.write_record("orders", row)
             if len(orders) < 100:
                 break
-            page_number += 1
+            
     state = singer.write_bookmark(state, 'orders', bookmark_column, last_update)
     singer.write_state(state)
     LOGGER.info("Completed Orders Sync")
