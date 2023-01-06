@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from datetime import timedelta
 import os
 import json
 import attr
@@ -36,7 +37,7 @@ def load_schemas():
 
 def get_bookmark(stream_id):
     bookmark = {
-        "orders": "date_created",
+        "orders": "date_modified",
         "reports": "date_end"
     }
     return bookmark.get(stream_id)
@@ -90,8 +91,9 @@ def sync_orders(woocommerce_client, config, state, stream):
         key_properties=stream.key_properties,
     )
 
-    start_date = singer.get_bookmark(state, stream.tap_stream_id, bookmark_column).split(" ")[0] \
-        if state.get("bookmarks", {}).get(stream.tap_stream_id) else config["start_date"]
+    start_date = singer.get_bookmark(state, stream.tap_stream_id, bookmark_column)        
+    if not start_date:
+        start_date = config["start_date"]
 
     LOGGER.info("Only syncing orders updated since " + start_date)
     last_update = start_date
@@ -121,7 +123,10 @@ def sync_orders(woocommerce_client, config, state, stream):
                 singer.write_record("orders", row)
             if len(orders) < 100:
                 break
-            
+
+    # will resync last order but avoid the problem of missing orders 
+    # that occured at the same exact second
+    last_update = str(parser.parse(last_update) - timedelta(seconds=1))
     state = singer.write_bookmark(state, 'orders', bookmark_column, last_update)
     singer.write_state(state)
     LOGGER.info("Completed Orders Sync")
@@ -204,7 +209,7 @@ def get_abs_path(path):
 
 def get_key_properties(stream_id):
     key_properties = {
-        "orders": ["order_id"],
+        "orders": ["order_key"],
         "reports": ["date_start"]
     }
     return key_properties.get(stream_id, [])
