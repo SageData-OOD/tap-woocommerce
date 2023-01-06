@@ -14,7 +14,7 @@ def _giveup(exc):
 class ApiWrapper:
     def __init__(self, url, consumer_key, consumer_secret):
         self._logger = singer.get_logger()
-        self._wcApi = API(url, consumer_key, consumer_secret)
+        self._wcApi = API(url, consumer_key, consumer_secret, timeout=10)
 
     @utils.backoff((backoff.expo,requests.exceptions.RequestException), _giveup)
     @utils.ratelimit(20, 1)
